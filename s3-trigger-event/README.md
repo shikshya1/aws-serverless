@@ -16,7 +16,7 @@ table = dynamodb.Table('<TABLE-NAME>')
 The snapshot of the dataframe that I will be working with is displayed below.
 
 <figure>
-  <img src="https://github.com/shikshya1/aws-serverless/blob/main/s3-trigger-event/images/dataframe.png?raw=true" height=800, width=400 />
+  <img src="https://github.com/shikshya1/aws-serverless/blob/main/s3-trigger-event/images/dataframe.png?raw=true" />
 </figure>
 
 
