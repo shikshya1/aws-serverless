@@ -1,19 +1,48 @@
+# Create a trigger to upload data in csv files to DynamoDB when csv is inserted on S3 via Lambda function using Serverless Framework 
 
+This template demonstrates how to process a csv file when inserted on s3 bucket and use the data to populate DynamoDB table.  DynamoDB is a fully managed, serverless, key-value NoSQL database designed to run high-performance applications at any scale.I am only using DynamoDB in this project for test purpose as it is a bad choice when we are dealing with small size of data. 
 
+## Steps
 
-# Serverless Framework AWS Python Example
+#### Initialize a aws-python template from serverless framework
 
-This template demonstrates how to deploy a Python function running on AWS Lambda using the traditional Serverless Framework. The deployed function does not include any event definitions as well as any kind of persistence (database). For more advanced configurations check out the [examples repo](https://github.com/serverless/examples/) which includes integrations with SQS, DynamoDB or examples of functions that are triggered in `cron`-like manner. For details about configuration of specific `events`, please refer to our [documentation](https://www.serverless.com/framework/docs/providers/aws/events/).
-
-## Usage
-
-### Deployment
-
-In order to deploy the example, you need to run the following command:
+We then need to import boto3 (Python SDK that allows us to interact with DynamoDB and S3), pandas and s3fs (to read the csv file) library. We need to create a reference to our s3 bucket and DynamoDB table using:
 
 ```
-$ serverless deploy
+client = boto3.client('s3')
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('<TABLE-NAME>')
 ```
+
+### Manage permission
+
+We will need proper IAM Permissions in order to read file from s3 bucket and interact with DynamoDB. Inside the serverless.yml file make the following adjustments:
+
+```
+iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: 
+       - 'arn:aws:s3:::<bucket-name>/*'
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:931955206531:table/<table-name>
+```
+
+```
+events:
+        - s3:
+            bucket: serverless-s3trigger-demo
+            event: s3:ObjectCreated:*
+            rules:
+              - prefix: media-files/
+              - suffix: .csv
+            existing: true
+```
+
 
 After running deploy, you should see output similar to:
 

@@ -25,14 +25,11 @@ def hello(event, context):
         print("bucket", bucket)
         print("key", key)
 
-        # response_new = client.get_object(Bucket=bucket, Key=str(key))
-        # df = pd.read_csv(io.BytesIO(response_new["Body"].read()))
-
         path = "s3://" + bucket+ "/" + key
         df = pd.read_csv(path, delimiter='\t')
 
         print(df.columns)
-        
+
         with table.batch_writer() as batch:
             for index, row in df.iterrows():
                 batch.put_item(json.loads(row.to_json()))
