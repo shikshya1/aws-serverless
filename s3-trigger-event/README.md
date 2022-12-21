@@ -13,8 +13,15 @@ client = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('<TABLE-NAME>')
 ```
+The snapshot of the dataframe that I will be working with is displayed below.
 
-### Manage permission
+<figure>
+  <img src="https://github.com/shikshya1/aws-serverless/blob/main/s3-trigger-event/images/dataframe.png?raw=true" height=800, width=400 />
+</figure>
+
+
+
+#### Manage permission
 
 We will need proper IAM Permissions in order to read file from s3 bucket and interact with DynamoDB. Inside the serverless.yml file make the following adjustments:
 
@@ -31,6 +38,7 @@ iamRoleStatements:
       Resource:
         - arn:aws:dynamodb:us-east-1:931955206531:table/<table-name>
 ```
+
 
 ```
 events:
