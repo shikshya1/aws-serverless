@@ -73,7 +73,7 @@ layers:
 
 #### Event definition
 
-The hello function is called whenever a document with .csv extension is uploaded to folder media-files in the bucket. This will reference serverless-s3trigger-demo bucket.
+The hello function is called whenever a document with .csv extension is uploaded to folder media-files in the bucket. This will reference the existing s3 bucket defined if existing is set to true.
 
 
 ```
@@ -82,11 +82,18 @@ functions:
     handler: handler.hello
     events:
         - s3:
-            bucket: serverless-s3trigger-demo
+            bucket: <Bucket-name>
             event: s3:ObjectCreated:*
             rules:
-              - prefix: media-files/
+              - prefix: <prefix-if-any>/
               - suffix: .csv
             existing: true
 ```
 
+#### Deploy
+
+Deploy the application using sls deploy. Thus whenever a new file is inserted in the defined s3 bucket, the records will be inserted in the DynamoDB table.
+
+<figure>
+  <img src="https://github.com/shikshya1/aws-serverless/blob/main/s3-trigger-event/images/dynamodb.png?raw=true" />
+</figure>
