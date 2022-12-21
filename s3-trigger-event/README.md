@@ -1,4 +1,4 @@
-# Create a trigger to upload data in csv files to DynamoDB when csv is inserted on S3 via Lambda function using Serverless Framework 
+# Create a trigger to upload records from csv to DynamoDB when csv file is inserted on S3 via Lambda function using Serverless Framework
 
 This template demonstrates how to process a csv file when inserted on s3 bucket and use the data to populate DynamoDB table.  DynamoDB is a fully managed, serverless, key-value NoSQL database designed to run high-performance applications at any scale.I am only using DynamoDB in this project for test purpose as it is a bad choice when we are dealing with small size of data. 
 
