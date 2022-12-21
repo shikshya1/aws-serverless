@@ -19,7 +19,30 @@ The snapshot of the dataframe that I will be working with is displayed below.
   <img src="https://github.com/shikshya1/aws-serverless/blob/main/s3-trigger-event/images/dataframe.png?raw=true" />
 </figure>
 
+BatchNumber and StudentId columns are used as partition key and sort in DynamoDB table respectively.
 
+We will extract the information about the csv path through Amazon S3 Event Notifications and read the records. We will then use batch writer to write objects to Amazon DynamoDB in batch.
+
+```
+for item in event.get("Records"):
+        s3 = item.get("s3")
+        bucket = s3.get("bucket").get("name")
+        key = s3.get("object").get("key")
+
+        print("bucket", bucket)
+        print("key", key)
+
+        path = "s3://" + bucket+ "/" + key
+        df = pd.read_csv(path, delimiter='\t')
+
+        print(df.columns)
+
+        with table.batch_writer() as batch:
+            for index, row in df.iterrows():
+                batch.put_item(json.loads(row.to_json()))
+```
+
+### serverless.yaml file walkthrough
 
 #### Manage permission
 
@@ -38,10 +61,26 @@ iamRoleStatements:
       Resource:
         - arn:aws:dynamodb:us-east-1:931955206531:table/<table-name>
 ```
+#### Layers
+
+As we will need pandas and s3fs to read the csv files, I will be providing the ARN's of the lambda layers of both of these libraries that I created while working on different project. 
+
+```
+layers:
+        - arn:aws:lambda:us-east-1:931955206531:layer:pandas-numpy:1
+        - arn:aws:lambda:us-east-1:931955206531:layer:s3fs:3
+```
+
+#### Event definition
+
+The hello function is called whenever a document with .csv extension is uploaded to folder media-files in the bucket. This will reference serverless-s3trigger-demo bucket.
 
 
 ```
-events:
+functions:
+  hello:
+    handler: handler.hello
+    events:
         - s3:
             bucket: serverless-s3trigger-demo
             event: s3:ObjectCreated:*
@@ -51,58 +90,3 @@ events:
             existing: true
 ```
 
-
-After running deploy, you should see output similar to:
-
-```bash
-Deploying aws-python-project to stage dev (us-east-1)
-
-✔ Service deployed to stack aws-python-project-dev (112s)
-
-functions:
-  hello: aws-python-project-dev-hello (1.5 kB)
-```
-
-### Invocation
-
-After successful deployment, you can invoke the deployed function by using the following command:
-
-```bash
-serverless invoke --function hello
-```
-
-Which should result in response similar to the following:
-
-```json
-{
-    "statusCode": 200,
-    "body": "{\"message\": \"Go Serverless v3.0! Your function executed successfully!\", \"input\": {}}"
-}
-```
-
-### Local development
-
-You can invoke your function locally by using the following command:
-
-```bash
-serverless invoke local --function hello
-```
-
-Which should result in response similar to the following:
-
-```
-{
-    "statusCode": 200,
-    "body": "{\"message\": \"Go Serverless v3.0! Your function executed successfully!\", \"input\": {}}"
-}
-```
-
-### Bundling dependencies
-
-In case you would like to include third-party dependencies, you will need to use a plugin called `serverless-python-requirements`. You can set it up by running the following command:
-
-```bash
-serverless plugin install -n serverless-python-requirements
-```
-
-Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
