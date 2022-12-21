@@ -59,7 +59,7 @@ iamRoleStatements:
       Action:
         - dynamodb:*
       Resource:
-        - arn:aws:dynamodb:us-east-1:931955206531:table/<table-name>
+        - arn:aws:dynamodb:us-east-1:************:table/<table-name>
 ```
 #### Layers
 
@@ -67,13 +67,13 @@ As we will need pandas and s3fs to read the csv files, I will be providing the A
 
 ```
 layers:
-        - arn:aws:lambda:us-east-1:931955206531:layer:pandas-numpy:1
-        - arn:aws:lambda:us-east-1:931955206531:layer:s3fs:3
+        - arn:aws:lambda:us-east-1:************:layer:pandas-numpy:1
+        - arn:aws:lambda:us-east-1:************:layer:s3fs:3
 ```
 
 #### Event definition
 
-The hello function is called whenever a document with .csv extension is uploaded to folder media-files in the bucket. This will reference the existing s3 bucket defined if existing is set to true.
+The hello function is called whenever a document with .csv extension is uploaded to s3 bucket. This will reference the existing s3 bucket defined if existing is set to true.
 
 
 ```
