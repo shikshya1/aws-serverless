@@ -62,7 +62,7 @@ environment:
 To test the function, I am using AWS console and the snapshot of the result is attached below.
 
 <figure>
-  <img src="https://github.com/shikshya1/aws-serverless/blob/main/s3-trigger-event/images/dataframe.png?raw=true" />
+  <img src="https://github.com/shikshya1/aws-serverless/blob/main/sentence-similarity-efs/images/result.png?raw=true" />
 </figure>
 
 References:
