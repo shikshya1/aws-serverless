@@ -1,0 +1,26 @@
+service: sentence-similarity-efs
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  timeout: 120
+  environment:
+   PYTHONPATH: "/mnt/tmp/lib"
+
+
+
+functions:
+  hello:
+    handler: handler.hello
+    fileSystemConfig:
+      localMountPath: /mnt/tmp
+      arn: arn:aws:elasticfilesystem:us-east-1:931955206531:access-point/fsap-08c6b99eba84f318e
+    vpc:
+      securityGroupIds:
+        - sg-b774b4f9
+      subnetIds:
+        - subnet-40762e0a
+        - subnet-42881d1e
+        - subnet-97fc74f0
