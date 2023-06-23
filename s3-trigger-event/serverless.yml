@@ -8,8 +8,8 @@ provider:
   memorySize: 128
   timeout: 120
   layers:
-        - arn:aws:lambda:us-east-1:931955206531:layer:pandas-numpy:1
-        - arn:aws:lambda:us-east-1:931955206531:layer:s3fs:3
+        - arn:aws:lambda:us-east-1:************:layer:pandas-numpy:1
+        - arn:aws:lambda:us-east-1:************:layer:s3fs:3
 
   iamRoleStatements:
     - Effect: Allow
@@ -21,7 +21,7 @@ provider:
       Action:
         - dynamodb:*
       Resource:
-        - arn:aws:dynamodb:us-east-1:931955206531:table/s3trigger_serverless
+        - arn:aws:dynamodb:us-east-1:************:table/s3trigger_serverless
 
 
 functions:
