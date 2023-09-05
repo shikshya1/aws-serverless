@@ -19,8 +19,8 @@ functions:
       arn: arn:aws:elasticfilesystem:us-east-1:************:access-point/fsap-08c6b99eba84f318e
     vpc:
       securityGroupIds:
-        - sg-b774b4f9
+        - sg-********
       subnetIds:
-        - subnet-40762e0a
-        - subnet-42881d1e
-        - subnet-97fc74f0
+        - subnet-********
+        - subnet-********
+        - subnet-********
